@@ -17,3 +17,4 @@ parts:
   - caption: numpyro
     chapters:
       - file: chapters/numpyro/introduction
+      - file: chapters/numpyro/surrogates
