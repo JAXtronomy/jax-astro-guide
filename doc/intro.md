@@ -1,4 +1,4 @@
-# A primer on Data Science in Astronomy
+# A primer on Jax ecosystem(s) in astronomy
 
 This repository is a tentative book on the basics of varied tools using Astronomy language.
 
