@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Jax &#8212; jax-astro-guide</title>
+    <title>Surrogate Models in Astronomy: Why and How with Python and JAX &#8212; jax-astro-guide</title>
   
   
   
@@ -57,11 +57,10 @@
     <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/jax/introduction';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/numpyro/surrogates';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Numpyro" href="../numpyro/introduction.html" />
-    <link rel="prev" title="Prerequisites" href="../requirements.html" />
+    <link rel="prev" title="Numpyro" href="introduction.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -185,13 +184,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../requirements.html">Prerequisites</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">jax</span></p>
-<ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Jax</a></li>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../jax/introduction.html">Jax</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">numpyro</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../numpyro/introduction.html">Numpyro</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../numpyro/surrogates.html">Surrogate Models in Astronomy: Why and How with Python and JAX</a></li>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Numpyro</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Surrogate Models in Astronomy: Why and How with Python and JAX</a></li>
 </ul>
 
     </div>
@@ -263,7 +262,7 @@
       
       
       
-      <li><a href="https://github.com/JAXtronomy/jax-astro-guide/issues/new?title=Issue%20on%20page%20%2Fchapters/jax/introduction.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/JAXtronomy/jax-astro-guide/issues/new?title=Issue%20on%20page%20%2Fchapters/numpyro/surrogates.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -293,7 +292,7 @@
       
       
       
-      <li><a href="../../_sources/chapters/jax/introduction.md" target="_blank"
+      <li><a href="../../_sources/chapters/numpyro/surrogates.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -364,7 +363,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -375,11 +376,21 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Jax</h1>
+    <h1>Surrogate Models in Astronomy: Why and How with Python and JAX</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-surrogate-models">Why Surrogate Models?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-create-surrogate-models-with-python-and-jax">How to Create Surrogate Models with Python and JAX</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#limitations-of-surrogate-models">Limitations of Surrogate Models</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -389,8 +400,38 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="jax">
-<h1>Jax<a class="headerlink" href="#jax" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="surrogate-models-in-astronomy-why-and-how-with-python-and-jax">
+<h1>Surrogate Models in Astronomy: Why and How with Python and JAX<a class="headerlink" href="#surrogate-models-in-astronomy-why-and-how-with-python-and-jax" title="Link to this heading">#</a></h1>
+<p>Surrogate models, also known as metamodels or emulator models, are simplified representations of more complex models. They are used in various fields, including astronomy, to make predictions about a system without having to run a full simulation, which can be computationally expensive and time-consuming.</p>
+<section id="why-surrogate-models">
+<h2>Why Surrogate Models?<a class="headerlink" href="#why-surrogate-models" title="Link to this heading">#</a></h2>
+<p>In astronomy, simulations of planets, stars, galaxies or the Universe and phenomena can involve complex physics and large datasets, making them computationally intensive. Surrogate models provide a way to approximate these simulations, offering several advantages:</p>
+<ol class="arabic simple">
+<li><p><strong>Efficiency</strong>: Surrogate models are faster to run than full simulations, making them useful for tasks that require many iterations, such as parameter tuning or uncertainty quantification.</p></li>
+<li><p><strong>Interpretability</strong>: Surrogate models can be easier to interpret than the original models, helping to understand the underlying physics.</p></li>
+<li><p><strong>Feasibility</strong>: In some cases, running a full simulation may not be feasible due to resource constraints. Surrogate models provide a viable alternative.</p></li>
+</ol>
+</section>
+<section id="how-to-create-surrogate-models-with-python-and-jax">
+<h2>How to Create Surrogate Models with Python and JAX<a class="headerlink" href="#how-to-create-surrogate-models-with-python-and-jax" title="Link to this heading">#</a></h2>
+<p>Python, a high-level programming language, is widely used in astronomy for its readability and extensive scientific libraries. JAX, a Python library, extends the capabilities of NumPy and autograd to leverage hardware accelerators like GPUs or TPUs.</p>
+<p>Here’s a simplified process of creating a surrogate model:</p>
+<ol class="arabic simple">
+<li><p><strong>Data Preparation</strong>: Gather data from the original model or simulation. This could be a set of input parameters and corresponding outputs.</p></li>
+<li><p><strong>Model Training</strong>: Use a machine learning algorithm to train a model on this data. JAX can be used for this step, as it provides automatic differentiation and XLA-compiled machine learning routines.</p></li>
+<li><p><strong>Model Validation</strong>: Validate the surrogate model against the original model or simulation. This could involve comparing the outputs of the surrogate model with those of the original model for a new set of inputs.</p></li>
+</ol>
+</section>
+<section id="limitations-of-surrogate-models">
+<h2>Limitations of Surrogate Models<a class="headerlink" href="#limitations-of-surrogate-models" title="Link to this heading">#</a></h2>
+<p>While surrogate models offer many advantages, they also have limitations:</p>
+<ol class="arabic simple">
+<li><p><strong>Accuracy</strong>: Surrogate models are approximations, so they may not capture all the nuances of the original model or simulation.</p></li>
+<li><p><strong>Overfitting</strong>: If the surrogate model is too complex or the training data is too sparse, the model may overfit to the training data and perform poorly on new data.</p></li>
+<li><p><strong>Extrapolation</strong>: Surrogate models are based on the data they were trained on and may not perform well when extrapolating beyond this data.</p></li>
+</ol>
+<p>Despite these limitations, surrogate models remain a powerful tool in astronomy, enabling researchers to make predictions and gain insights more efficiently.</p>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -406,7 +447,7 @@ document.write(`
         },
         kernelOptions: {
             name: "python3",
-            path: "./chapters/jax"
+            path: "./chapters/numpyro"
         },
         predefinedOutput: true
     }
@@ -424,22 +465,13 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../requirements.html"
+       href="introduction.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Prerequisites</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="../numpyro/introduction.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title">Numpyro</p>
       </div>
-      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
@@ -447,6 +479,23 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-surrogate-models">Why Surrogate Models?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-create-surrogate-models-with-python-and-jax">How to Create Surrogate Models with Python and JAX</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#limitations-of-surrogate-models">Limitations of Surrogate Models</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
