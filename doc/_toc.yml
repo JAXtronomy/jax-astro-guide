@@ -1,0 +1,19 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: intro
+
+parts:
+  - caption: Introduction
+    chapters:
+      - file: chapters/preface
+      - file: chapters/requirements
+    
+  - caption: jax
+    chapters:
+      - file: chapters/jax/introduction
+
+  - caption: numpyro
+    chapters:
+      - file: chapters/numpyro/introduction
