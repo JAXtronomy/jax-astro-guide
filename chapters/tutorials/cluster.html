@@ -1,0 +1,1545 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>2D model fitting with JAX &amp; numpyro &#8212; jax-astro-guide</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/tutorials/cluster';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Differentiable DM simulations" href="nbody.html" />
+    <link rel="prev" title="JAXtronomy-tutorials" href="intro.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="jax-astro-guide - Home"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="jax-astro-guide - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../intro.html">
+                    A primer on Jax ecosystem(s) in astronomy
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../requirements.html">Prerequisites</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">jax</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../jax/introduction.html">Jax</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">numpyro</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../numpyro/introduction.html">Numpyro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../numpyro/surrogates.html">Surrogate Models in Astronomy: Why and How with Python and JAX</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">tutorials</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">JAXtronomy-tutorials</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">2D model fitting with <code class="docutils literal notranslate"><span class="pre">JAX</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">numpyro</span></code></a></li>
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="nbody.html">Differentiable DM simulations</a></li>
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/JAXtronomy/jax-astro-guide" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/JAXtronomy/jax-astro-guide/issues/new?title=Issue%20on%20page%20%2Fchapters/tutorials/cluster.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/chapters/tutorials/cluster.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>2D model fitting with JAX & numpyro</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">2D model fitting with <code class="docutils literal notranslate"><span class="pre">JAX</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">numpyro</span></code></a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#import-and-data-loading">Import and data loading</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#data-from-erosita-edr">Data from eRosita EDR</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#surface-brightness-model">Surface Brightness Model</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#maximum-likelihood-estimation">Maximum likelihood estimation</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-approach">Bayesian approach</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-mcmc">Running the MCMC</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sanity-checks">Sanity checks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#display-the-results">Display the results</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <p><a href="https://colab.research.google.com/github/renecotyfanboy/JAXtronomy-tutorials/blob/main/cluster.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a></p>
+<section class="tex2jax_ignore mathjax_ignore" id="d-model-fitting-with-jax-numpyro">
+<h1>2D model fitting with <code class="docutils literal notranslate"><span class="pre">JAX</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">numpyro</span></code><a class="headerlink" href="#d-model-fitting-with-jax-numpyro" title="Link to this heading">#</a></h1>
+<p>In this notebook we will show you how to solve a Bayesian inference problem using numpyro and JAX. We will focus on fitting a surface brightness model to an X-ray image of the galaxy cluster Abell 3266, using the early data release of eRosita. Please note that solving a Bayesian inference problem using MCMC usually takes a long time. To keep the timescale small, we resample the image to an absurdly small number of pixels to make the MCMC run faster. A more precise example can be found <a class="reference external" href="https://renecotyfanboy.github.io/clusterXrayFluctuation/examples/mean_model/">here</a>.</p>
+<p>It is divided in 4 sections:</p>
+<ol class="arabic simple">
+<li><p>Data downloading and pre-treatment</p></li>
+<li><p>Description of the model</p></li>
+<li><p>Maximum likelihood estimation</p></li>
+<li><p>Full Bayesian inference</p></li>
+</ol>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="import-and-data-loading">
+<h1>Import and data loading<a class="headerlink" href="#import-and-data-loading" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>cmasher<span class="w"> </span>numpyro<span class="w"> </span>chainconsumer<span class="w"> </span>jaxopt
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting cmasher
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  Downloading cmasher-1.8.0-py3-none-any.whl.metadata (8.2 kB)
+Requirement already satisfied: numpyro in /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages (0.15.3)
+Collecting chainconsumer
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  Downloading chainconsumer-1.1.2-py3-none-any.whl.metadata (15 kB)
+Collecting jaxopt
+  Downloading jaxopt-0.8.3-py3-none-any.whl.metadata (2.6 kB)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting colorspacious&gt;=1.1.0 (from cmasher)
+  Downloading colorspacious-1.1.2-py2.py3-none-any.whl.metadata (3.6 kB)
+Requirement already satisfied: matplotlib&gt;=3.5 in /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages (from cmasher) (3.9.2)
+Requirement already satisfied: numpy&gt;=1.19.3 in /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages (from cmasher) (1.26.4)
+Requirement already satisfied: jax&gt;=0.4.25 in /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages (from numpyro) (0.4.34)
+Requirement already satisfied: jaxlib&gt;=0.4.25 in /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages (from numpyro) (0.4.34)
+Requirement already satisfied: multipledispatch in /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages (from numpyro) (1.0.0)
+Requirement already satisfied: tqdm in /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages (from numpyro) (4.66.5)
+Requirement already satisfied: pandas&lt;3.0.0,&gt;=2.1.1 in /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages (from chainconsumer) (2.2.3)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting pillow&lt;11.0.0,&gt;=10.0.1 (from chainconsumer)
+  Downloading pillow-10.4.0-cp312-cp312-manylinux_2_28_x86_64.whl.metadata (9.2 kB)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting pydantic&lt;3.0.0,&gt;=2.2.0 (from chainconsumer)
+  Downloading pydantic-2.9.2-py3-none-any.whl.metadata (149 kB)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: scipy&lt;2.0.0,&gt;=1.8.0 in /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages (from chainconsumer) (1.14.1)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting statsmodels&lt;1,&gt;=0.14.0 (from chainconsumer)
+  Downloading statsmodels-0.14.4-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (9.2 kB)
+Requirement already satisfied: ml-dtypes&gt;=0.2.0 in /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages (from jax&gt;=0.4.25-&gt;numpyro) (0.4.1)
+Requirement already satisfied: opt-einsum in /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages (from jax&gt;=0.4.25-&gt;numpyro) (3.4.0)
+Requirement already satisfied: contourpy&gt;=1.0.1 in /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages (from matplotlib&gt;=3.5-&gt;cmasher) (1.3.0)
+Requirement already satisfied: cycler&gt;=0.10 in /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages (from matplotlib&gt;=3.5-&gt;cmasher) (0.12.1)
+Requirement already satisfied: fonttools&gt;=4.22.0 in /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages (from matplotlib&gt;=3.5-&gt;cmasher) (4.54.1)
+Requirement already satisfied: kiwisolver&gt;=1.3.1 in /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages (from matplotlib&gt;=3.5-&gt;cmasher) (1.4.7)
+Requirement already satisfied: packaging&gt;=20.0 in /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages (from matplotlib&gt;=3.5-&gt;cmasher) (24.1)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: pyparsing&gt;=2.3.1 in /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages (from matplotlib&gt;=3.5-&gt;cmasher) (3.2.0)
+Requirement already satisfied: python-dateutil&gt;=2.7 in /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages (from matplotlib&gt;=3.5-&gt;cmasher) (2.9.0.post0)
+Requirement already satisfied: pytz&gt;=2020.1 in /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages (from pandas&lt;3.0.0,&gt;=2.1.1-&gt;chainconsumer) (2024.2)
+Requirement already satisfied: tzdata&gt;=2022.7 in /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages (from pandas&lt;3.0.0,&gt;=2.1.1-&gt;chainconsumer) (2024.2)
+Collecting annotated-types&gt;=0.6.0 (from pydantic&lt;3.0.0,&gt;=2.2.0-&gt;chainconsumer)
+  Downloading annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting pydantic-core==2.23.4 (from pydantic&lt;3.0.0,&gt;=2.2.0-&gt;chainconsumer)
+  Downloading pydantic_core-2.23.4-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.6 kB)
+Requirement already satisfied: typing-extensions&gt;=4.6.1 in /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages (from pydantic&lt;3.0.0,&gt;=2.2.0-&gt;chainconsumer) (4.12.2)
+Collecting patsy&gt;=0.5.6 (from statsmodels&lt;1,&gt;=0.14.0-&gt;chainconsumer)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  Downloading patsy-0.5.6-py2.py3-none-any.whl.metadata (3.5 kB)
+Requirement already satisfied: six in /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages (from patsy&gt;=0.5.6-&gt;statsmodels&lt;1,&gt;=0.14.0-&gt;chainconsumer) (1.16.0)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading cmasher-1.8.0-py3-none-any.whl (533 kB)
+?25l   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">0.0/533.3 kB</span> <span class=" -Color -Color-Red">?</span> eta <span class=" -Color -Color-Cyan">-:--:--</span>
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">533.3/533.3 kB</span> <span class=" -Color -Color-Red">48.2 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:00</span>
+?25hDownloading chainconsumer-1.1.2-py3-none-any.whl (47 kB)
+Downloading jaxopt-0.8.3-py3-none-any.whl (172 kB)
+Downloading colorspacious-1.1.2-py2.py3-none-any.whl (37 kB)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading pillow-10.4.0-cp312-cp312-manylinux_2_28_x86_64.whl (4.5 MB)
+?25l   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">0.0/4.5 MB</span> <span class=" -Color -Color-Red">?</span> eta <span class=" -Color -Color-Cyan">-:--:--</span>
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">4.5/4.5 MB</span> <span class=" -Color -Color-Red">136.0 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:00</span>
+?25h
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading pydantic-2.9.2-py3-none-any.whl (434 kB)
+Downloading pydantic_core-2.23.4-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+?25l   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">0.0/2.1 MB</span> <span class=" -Color -Color-Red">?</span> eta <span class=" -Color -Color-Cyan">-:--:--</span>
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">2.1/2.1 MB</span> <span class=" -Color -Color-Red">139.2 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:00</span>
+?25hDownloading statsmodels-0.14.4-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (10.7 MB)
+?25l   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">0.0/10.7 MB</span> <span class=" -Color -Color-Red">?</span> eta <span class=" -Color -Color-Cyan">-:--:--</span>
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">10.7/10.7 MB</span> <span class=" -Color -Color-Red">134.3 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:00</span>
+?25hDownloading annotated_types-0.7.0-py3-none-any.whl (13 kB)
+Downloading patsy-0.5.6-py2.py3-none-any.whl (233 kB)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Installing collected packages: pydantic-core, pillow, patsy, colorspacious, annotated-types, pydantic, statsmodels, cmasher, jaxopt, chainconsumer
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  Attempting uninstall: pillow
+    Found existing installation: pillow 11.0.0
+    Uninstalling pillow-11.0.0:
+      Successfully uninstalled pillow-11.0.0
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Successfully installed annotated-types-0.7.0 chainconsumer-1.1.2 cmasher-1.8.0 colorspacious-1.1.2 jaxopt-0.8.3 patsy-0.5.6 pillow-10.4.0 pydantic-2.9.2 pydantic-core-2.23.4 statsmodels-0.14.4
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>gdown<span class="w"> </span>1LGHpPp0KXnCRDtJD2alvyvaiNaJ7eDT3<span class="w"> </span>#<span class="w"> </span>A3266<span class="w"> </span>image<span class="w"> </span>from<span class="w"> </span>E-Rosita<span class="w"> </span>public<span class="w"> </span>data
+<span class="o">!</span>gdown<span class="w"> </span>1PLvzBbae0EANWBLggqgwPDwecsx7sxLF<span class="w"> </span>#<span class="w"> </span>A3266<span class="w"> </span>exposure<span class="w"> </span>map
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/bin/sh: 1: gdown: not found
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/bin/sh: 1: gdown: not found
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpyro</span>
+
+<span class="n">numpyro</span><span class="o">.</span><span class="n">enable_x64</span><span class="p">()</span>
+<span class="n">numpyro</span><span class="o">.</span><span class="n">set_platform</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+<span class="n">numpyro</span><span class="o">.</span><span class="n">set_host_device_count</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">jax</span>
+<span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">cmasher</span> <span class="k">as</span> <span class="nn">cmr</span>
+<span class="kn">import</span> <span class="nn">numpyro.distributions</span> <span class="k">as</span> <span class="nn">dist</span>
+<span class="kn">from</span> <span class="nn">astropy.nddata</span> <span class="kn">import</span> <span class="n">block_reduce</span>
+<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">LogNorm</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+<span class="kn">from</span> <span class="nn">astropy.wcs</span> <span class="kn">import</span> <span class="n">WCS</span>
+<span class="kn">from</span> <span class="nn">jax</span> <span class="kn">import</span> <span class="n">random</span>
+<span class="kn">from</span> <span class="nn">jax.random</span> <span class="kn">import</span> <span class="n">PRNGKey</span>
+<span class="kn">from</span> <span class="nn">numpyro.infer</span> <span class="kn">import</span> <span class="n">MCMC</span><span class="p">,</span> <span class="n">NUTS</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages/tqdm/auto.py:21: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+  from .autonotebook import tqdm as notebook_tqdm
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="data-from-erosita-edr">
+<h1>Data from eRosita EDR<a class="headerlink" href="#data-from-erosita-edr" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load the data</span>
+
+<span class="n">img_uncropped</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;a3266_img_erosita.fits&#39;</span><span class="p">)</span>
+<span class="n">exp_uncropped</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;a3266_exp_erosita.fits&#39;</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+    <span class="n">wcs</span> <span class="o">=</span> <span class="n">WCS</span><span class="p">(</span><span class="n">header</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getheader</span><span class="p">(</span><span class="s1">&#39;a3266_img_erosita.fits&#39;</span><span class="p">),</span> <span class="n">relax</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Crop to the central parts</span>
+
+<span class="n">size</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="n">x_min</span><span class="p">,</span> <span class="n">y_min</span> <span class="o">=</span> <span class="mi">1620</span><span class="o">-</span><span class="n">size</span><span class="p">,</span> <span class="mi">1620</span><span class="o">-</span><span class="n">size</span>
+<span class="n">x_max</span><span class="p">,</span> <span class="n">y_max</span> <span class="o">=</span> <span class="mi">1620</span><span class="o">+</span><span class="n">size</span><span class="p">,</span> <span class="mi">1620</span><span class="o">+</span><span class="n">size</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">img_uncropped</span><span class="p">[</span><span class="n">x_min</span><span class="p">:</span><span class="n">x_max</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">y_min</span><span class="p">:</span><span class="n">y_max</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">exp</span> <span class="o">=</span> <span class="n">exp_uncropped</span><span class="p">[</span><span class="n">x_min</span><span class="p">:</span><span class="n">x_max</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">y_min</span><span class="p">:</span><span class="n">y_max</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="c1"># Rebin to lower number</span>
+
+<span class="n">img</span> <span class="o">=</span> <span class="n">block_reduce</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">)</span>
+<span class="n">exp</span> <span class="o">=</span> <span class="n">block_reduce</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">)</span>
+
+<span class="c1"># Display the data</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="n">wcs</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_axislabel</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_axislabel</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+<span class="n">mappable</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">LogNorm</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="mf">5e1</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmr</span><span class="o">.</span><span class="n">cosmic</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Count image&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">mappable</span><span class="o">=</span><span class="n">mappable</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Photons&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="n">wcs</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_axislabel</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_axislabel</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+<span class="n">mappable</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmr</span><span class="o">.</span><span class="n">ember</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Exposure&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">mappable</span><span class="o">=</span><span class="n">mappable</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;seconds&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">FileNotFoundError</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">line</span> <span class="mi">3</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1"># Load the data</span>
+<span class="ne">----&gt; </span><span class="mi">3</span> <span class="n">img_uncropped</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;a3266_img_erosita.fits&#39;</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="n">exp_uncropped</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;a3266_exp_erosita.fits&#39;</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages/astropy/io/fits/convenience.py:220,</span> in <span class="ni">getdata</span><span class="nt">(filename, header, lower, upper, view, *args, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">215</span> <span class="n">extver</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;extver&quot;</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">216</span> <span class="n">ext_given</span> <span class="o">=</span> <span class="ow">not</span> <span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">217</span>     <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">ext</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">extname</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">extver</span> <span class="ow">is</span> <span class="kc">None</span>
+<span class="g g-Whitespace">    </span><span class="mi">218</span> <span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">220</span> <span class="n">hdulist</span><span class="p">,</span> <span class="n">extidx</span> <span class="o">=</span> <span class="n">_getext</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">221</span> <span class="k">try</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">222</span>     <span class="n">hdu</span> <span class="o">=</span> <span class="n">hdulist</span><span class="p">[</span><span class="n">extidx</span><span class="p">]</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages/astropy/io/fits/convenience.py:1121,</span> in <span class="ni">_getext</span><span class="nt">(filename, mode, ext, extname, extver, *args, **kwargs)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1118</span> <span class="k">elif</span> <span class="n">extver</span> <span class="ow">and</span> <span class="n">extname</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<span class="g g-Whitespace">   </span><span class="mi">1119</span>     <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;extver alone cannot specify an extension.&quot;</span><span class="p">)</span>
+<span class="ne">-&gt; </span><span class="mi">1121</span> <span class="n">hdulist</span> <span class="o">=</span> <span class="n">fitsopen</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1123</span> <span class="k">return</span> <span class="n">hdulist</span><span class="p">,</span> <span class="n">ext</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages/astropy/io/fits/hdu/hdulist.py:223,</span> in <span class="ni">fitsopen</span><span class="nt">(name, mode, memmap, save_backup, cache, lazy_load_hdus, ignore_missing_simple, use_fsspec, fsspec_kwargs, decompress_in_memory, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">220</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">221</span>     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Empty filename: </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">223</span> <span class="k">return</span> <span class="n">HDUList</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">224</span>     <span class="n">name</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">225</span>     <span class="n">mode</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">226</span>     <span class="n">memmap</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">227</span>     <span class="n">save_backup</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">228</span>     <span class="n">cache</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">229</span>     <span class="n">lazy_load_hdus</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">230</span>     <span class="n">ignore_missing_simple</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">231</span>     <span class="n">use_fsspec</span><span class="o">=</span><span class="n">use_fsspec</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">232</span>     <span class="n">fsspec_kwargs</span><span class="o">=</span><span class="n">fsspec_kwargs</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">233</span>     <span class="n">decompress_in_memory</span><span class="o">=</span><span class="n">decompress_in_memory</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">234</span>     <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">235</span> <span class="p">)</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages/astropy/io/fits/hdu/hdulist.py:487,</span> in <span class="ni">HDUList.fromfile</span><span class="nt">(cls, fileobj, mode, memmap, save_backup, cache, lazy_load_hdus, ignore_missing_simple, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">468</span> <span class="nd">@classmethod</span>
+<span class="g g-Whitespace">    </span><span class="mi">469</span> <span class="k">def</span> <span class="nf">fromfile</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">470</span>     <span class="bp">cls</span><span class="p">,</span>
+   <span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">478</span>     <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">479</span> <span class="p">):</span>
+<span class="g g-Whitespace">    </span><span class="mi">480</span><span class="w">     </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">481</span><span class="sd">     Creates an `HDUList` instance from a file-like object.</span>
+<span class="g g-Whitespace">    </span><span class="mi">482</span><span class="sd"> </span>
+<span class="sd">   (...)</span>
+<span class="g g-Whitespace">    </span><span class="mi">485</span><span class="sd">     documentation for details of the parameters accepted by this method).</span>
+<span class="g g-Whitespace">    </span><span class="mi">486</span><span class="sd">     &quot;&quot;&quot;</span>
+<span class="ne">--&gt; </span><span class="mi">487</span>     <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_readfrom</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">488</span>         <span class="n">fileobj</span><span class="o">=</span><span class="n">fileobj</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">489</span>         <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">490</span>         <span class="n">memmap</span><span class="o">=</span><span class="n">memmap</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">491</span>         <span class="n">save_backup</span><span class="o">=</span><span class="n">save_backup</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">492</span>         <span class="n">cache</span><span class="o">=</span><span class="n">cache</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">493</span>         <span class="n">ignore_missing_simple</span><span class="o">=</span><span class="n">ignore_missing_simple</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">494</span>         <span class="n">lazy_load_hdus</span><span class="o">=</span><span class="n">lazy_load_hdus</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">495</span>         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">496</span>     <span class="p">)</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages/astropy/io/fits/hdu/hdulist.py:1169,</span> in <span class="ni">HDUList._readfrom</span><span class="nt">(cls, fileobj, data, mode, memmap, cache, lazy_load_hdus, ignore_missing_simple, use_fsspec, fsspec_kwargs, decompress_in_memory, **kwargs)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1166</span> <span class="k">if</span> <span class="n">fileobj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<span class="g g-Whitespace">   </span><span class="mi">1167</span>     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fileobj</span><span class="p">,</span> <span class="n">_File</span><span class="p">):</span>
+<span class="g g-Whitespace">   </span><span class="mi">1168</span>         <span class="c1"># instantiate a FITS file object (ffo)</span>
+<span class="ne">-&gt; </span><span class="mi">1169</span>         <span class="n">fileobj</span> <span class="o">=</span> <span class="n">_File</span><span class="p">(</span>
+<span class="g g-Whitespace">   </span><span class="mi">1170</span>             <span class="n">fileobj</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">1171</span>             <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">1172</span>             <span class="n">memmap</span><span class="o">=</span><span class="n">memmap</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">1173</span>             <span class="n">cache</span><span class="o">=</span><span class="n">cache</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">1174</span>             <span class="n">use_fsspec</span><span class="o">=</span><span class="n">use_fsspec</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">1175</span>             <span class="n">fsspec_kwargs</span><span class="o">=</span><span class="n">fsspec_kwargs</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">1176</span>             <span class="n">decompress_in_memory</span><span class="o">=</span><span class="n">decompress_in_memory</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">1177</span>         <span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1178</span>     <span class="c1"># The Astropy mode is determined by the _File initializer if the</span>
+<span class="g g-Whitespace">   </span><span class="mi">1179</span>     <span class="c1"># supplied mode was None</span>
+<span class="g g-Whitespace">   </span><span class="mi">1180</span>     <span class="n">mode</span> <span class="o">=</span> <span class="n">fileobj</span><span class="o">.</span><span class="n">mode</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages/astropy/io/fits/file.py:218,</span> in <span class="ni">_File.__init__</span><span class="nt">(self, fileobj, mode, memmap, overwrite, cache, use_fsspec, fsspec_kwargs, decompress_in_memory)</span>
+<span class="g g-Whitespace">    </span><span class="mi">216</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_open_fileobj</span><span class="p">(</span><span class="n">fileobj</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">217</span> <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fileobj</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)):</span>
+<span class="ne">--&gt; </span><span class="mi">218</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_open_filename</span><span class="p">(</span><span class="n">fileobj</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">219</span> <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">220</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_open_filelike</span><span class="p">(</span><span class="n">fileobj</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">overwrite</span><span class="p">)</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages/astropy/io/fits/file.py:651,</span> in <span class="ni">_File._open_filename</span><span class="nt">(self, filename, mode, overwrite)</span>
+<span class="g g-Whitespace">    </span><span class="mi">648</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+<span class="g g-Whitespace">    </span><span class="mi">650</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_try_read_compressed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">magic</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">ext</span><span class="o">=</span><span class="n">ext</span><span class="p">):</span>
+<span class="ne">--&gt; </span><span class="mi">651</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">IO_FITS_MODES</span><span class="p">[</span><span class="n">mode</span><span class="p">])</span>
+<span class="g g-Whitespace">    </span><span class="mi">652</span>     <span class="bp">self</span><span class="o">.</span><span class="n">close_on_error</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="g g-Whitespace">    </span><span class="mi">654</span> <span class="c1"># Make certain we&#39;re back at the beginning of the file</span>
+<span class="g g-Whitespace">    </span><span class="mi">655</span> <span class="c1"># BZ2File does not support seek when the file is open for writing, but</span>
+<span class="g g-Whitespace">    </span><span class="mi">656</span> <span class="c1"># when opening a file for write, bz2.BZ2File always truncates anyway.</span>
+
+<span class="ne">FileNotFoundError</span>: [Errno 2] No such file or directory: &#39;a3266_img_erosita.fits&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="surface-brightness-model">
+<h1>Surface Brightness Model<a class="headerlink" href="#surface-brightness-model" title="Link to this heading">#</a></h1>
+<p>Here are the E-Rosita calibration images for the A3266 cluster of galaxies. For this example, we will determine an average emission model for this cluster. We choose the classical <span class="math notranslate nohighlight">\(\beta\)</span>-model <a class="reference external" href="https://ui-adsabs-harvard-edu.insu.bib.cnrs.fr/abs/1976A&amp;amp;A....49..137C/abstract">(Cavaliere &amp; Fusco-Femiano, 1976)</a> for this exercise. The <span class="math notranslate nohighlight">\(\beta\)</span>-model can describe either the surface brightness or the underlying density of the cluster, assuming spherical symmetry. It is expressed with the following equation :
+$<span class="math notranslate nohighlight">\(
+S_X(r) = S_{X,0} \left(1 + \left(\frac{r}{r_c}\right)^2\right)^{-\frac{3\beta}{2}}
+\)</span>$</p>
+<p>In the following cell, we show an implementation of this model which is numpy &amp; JAX friendly, and plot the profile to show its shape.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>
+<span class="k">def</span> <span class="nf">beta_model</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implementation of a surface brightness beta-model</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">norm</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;norm&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">r_c</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;r_c&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="mf">3.</span><span class="p">))</span>
+    <span class="n">beta</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;beta&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">norm</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">r</span><span class="o">/</span><span class="n">r_c</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="o">*</span><span class="n">beta</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># Plotting an example profile</span>
+
+<span class="n">r</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+
+<span class="n">figure</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">beta_model</span><span class="p">(</span><span class="n">r</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\beta$-model for the surface brightness&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Radius (pixel)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Surface brightness&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/b5391fd7bb53da15c622c2a234090cc381ab3a832db252fa1f935ce801849136.png" src="../../_images/b5391fd7bb53da15c622c2a234090cc381ab3a832db252fa1f935ce801849136.png" />
+</div>
+</div>
+<p>This kind of model is often used either as a density model or a surface brightness model. For the sake of simplicity, we will fit a surface brightness model here using Bayesian inference. To do so, we must relate our model to the observable, which is here the number of counts in each pixel of the image. One can write the expected counts in each pixel as follows :</p>
+<div class="math notranslate nohighlight">
+\[ \text{Counts} = S_X \times \text{Exposure} \]</div>
+<p>In the following cell, we show an implementation for this model and how it can accurately describe the expected emission from the cluster.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>
+<span class="k">def</span> <span class="nf">counts</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">indices</span><span class="p">(</span><span class="n">exp</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="n">x_c</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;x_c&#39;</span><span class="p">,</span> <span class="n">exp</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">y_c</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;y_c&#39;</span><span class="p">,</span> <span class="n">exp</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">))</span>
+
+    <span class="n">r</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">x_c</span><span class="p">,</span><span class="n">y</span><span class="o">-</span><span class="n">y_c</span><span class="p">)</span>
+
+    <span class="n">sb</span> <span class="o">=</span> <span class="n">beta_model</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">sb</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
+
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="n">wcs</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_axislabel</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_axislabel</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+<span class="n">mappable</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">counts</span><span class="p">(</span><span class="n">exp</span><span class="p">),</span> <span class="n">norm</span><span class="o">=</span><span class="n">LogNorm</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="mf">5e1</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmr</span><span class="o">.</span><span class="n">cosmic</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Mock image from our model&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">mappable</span><span class="o">=</span><span class="n">mappable</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Photons&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/2e1d0accb607d0a2c8ba1c1485e09dae644ca09677377eb81bc22a3711cdc33d.png" src="../../_images/2e1d0accb607d0a2c8ba1c1485e09dae644ca09677377eb81bc22a3711cdc33d.png" />
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="maximum-likelihood-estimation">
+<h1>Maximum likelihood estimation<a class="headerlink" href="#maximum-likelihood-estimation" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">jaxopt</span>
+
+<span class="n">init_params</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;x_c&#39;</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="mf">25.</span><span class="p">),</span>
+        <span class="s1">&#39;y_c&#39;</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="mf">25.</span><span class="p">),</span>
+        <span class="s1">&#39;norm&#39;</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="mf">0.05</span><span class="p">),</span>
+        <span class="s1">&#39;r_c&#39;</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="mf">10.</span><span class="p">),</span>
+        <span class="s1">&#39;beta&#39;</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="mi">3</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span>
+        <span class="p">}</span>
+
+<span class="n">low</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;x_c&#39;</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="mf">15.</span><span class="p">),</span>
+        <span class="s1">&#39;y_c&#39;</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="mf">15.</span><span class="p">),</span>
+        <span class="s1">&#39;norm&#39;</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="mf">0.</span><span class="p">),</span>
+        <span class="s1">&#39;r_c&#39;</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="mf">5.</span><span class="p">),</span>
+        <span class="s1">&#39;beta&#39;</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="mf">0.</span><span class="p">),</span>
+        <span class="p">}</span>
+
+<span class="n">high</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;x_c&#39;</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="mf">35.</span><span class="p">),</span>
+        <span class="s1">&#39;y_c&#39;</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="mf">35.</span><span class="p">),</span>
+        <span class="s1">&#39;norm&#39;</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="mf">1.</span><span class="p">),</span>
+        <span class="s1">&#39;r_c&#39;</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="mf">20.</span><span class="p">),</span>
+        <span class="s1">&#39;beta&#39;</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="mf">2.</span><span class="p">),</span>
+        <span class="p">}</span>
+
+<span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>
+<span class="k">def</span> <span class="nf">loss</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+    <span class="k">return</span> <span class="o">-</span><span class="n">dist</span><span class="o">.</span><span class="n">Poisson</span><span class="p">(</span><span class="n">counts</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">))</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+<span class="n">solver</span> <span class="o">=</span> <span class="n">jaxopt</span><span class="o">.</span><span class="n">ScipyBoundedMinimize</span><span class="p">(</span><span class="n">fun</span><span class="o">=</span><span class="n">loss</span><span class="p">)</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">init_params</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">best_fit</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">params</span>
+<span class="n">best_fit_image</span> <span class="o">=</span> <span class="n">counts</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="o">**</span><span class="n">best_fit</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">131</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="n">wcs</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_axislabel</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_axislabel</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+<span class="n">mappable</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">LogNorm</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="mf">5e1</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmr</span><span class="o">.</span><span class="n">cosmic</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Count image&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">mappable</span><span class="o">=</span><span class="n">mappable</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Photons&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">132</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="n">wcs</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_axislabel</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_axislabel</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+<span class="n">mappable</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">best_fit_image</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">LogNorm</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="mf">5e1</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmr</span><span class="o">.</span><span class="n">cosmic</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Best-fit image&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">mappable</span><span class="o">=</span><span class="n">mappable</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Photons&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">133</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="n">wcs</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_axislabel</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_axislabel</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+<span class="n">mappable</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">((</span><span class="n">img</span><span class="o">-</span><span class="n">best_fit_image</span><span class="p">)</span><span class="o">/</span><span class="n">exp</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmr</span><span class="o">.</span><span class="n">guppy</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Residuals&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">mappable</span><span class="o">=</span><span class="n">mappable</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Surface brightness&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/ab403bfdfba6a4a50cd4e864db164a8ab5214756958ff4bf7574731249fbbbc0.png" src="../../_images/ab403bfdfba6a4a50cd4e864db164a8ab5214756958ff4bf7574731249fbbbc0.png" />
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="bayesian-approach">
+<h1>Bayesian approach<a class="headerlink" href="#bayesian-approach" title="Link to this heading">#</a></h1>
+<section id="running-the-mcmc">
+<h2>Running the MCMC<a class="headerlink" href="#running-the-mcmc" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">model</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">exp</span><span class="p">):</span>
+
+    <span class="n">prior</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;x_c&#39;</span><span class="p">:</span> <span class="n">numpyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="s1">&#39;x_c&#39;</span><span class="p">,</span> <span class="n">dist</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+        <span class="s1">&#39;y_c&#39;</span><span class="p">:</span> <span class="n">numpyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="s1">&#39;y_c&#39;</span><span class="p">,</span> <span class="n">dist</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+        <span class="s1">&#39;norm&#39;</span><span class="p">:</span> <span class="n">numpyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="s1">&#39;norm&#39;</span><span class="p">,</span> <span class="n">dist</span><span class="o">.</span><span class="n">LogUniform</span><span class="p">(</span><span class="mf">1e-4</span><span class="p">,</span> <span class="mf">1e-1</span><span class="p">)),</span>
+        <span class="s1">&#39;r_c&#39;</span><span class="p">:</span> <span class="n">numpyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="s1">&#39;r_c&#39;</span><span class="p">,</span> <span class="n">dist</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">)),</span>
+        <span class="s1">&#39;beta&#39;</span><span class="p">:</span> <span class="n">numpyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="s1">&#39;beta&#39;</span><span class="p">,</span> <span class="n">dist</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">))</span>
+    <span class="p">}</span>
+
+    <span class="n">numpyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="s1">&#39;likelihood&#39;</span><span class="p">,</span>
+                    <span class="n">dist</span><span class="o">.</span><span class="n">Poisson</span><span class="p">(</span><span class="n">counts</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="o">**</span><span class="n">prior</span><span class="p">)),</span>
+                    <span class="n">obs</span><span class="o">=</span><span class="n">img</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numpyro.infer.reparam</span> <span class="kn">import</span> <span class="n">TransformReparam</span><span class="p">,</span> <span class="n">LocScaleReparam</span>
+<span class="kn">from</span> <span class="nn">numpyro</span> <span class="kn">import</span> <span class="n">handlers</span>
+
+<span class="n">reparametrized_model</span> <span class="o">=</span> <span class="n">handlers</span><span class="o">.</span><span class="n">reparam</span><span class="p">(</span>
+    <span class="n">model</span><span class="p">,</span>
+     <span class="p">{</span>
+         <span class="s2">&quot;norm&quot;</span><span class="p">:</span> <span class="n">TransformReparam</span><span class="p">(),</span>
+         <span class="s2">&quot;x_c&quot;</span><span class="p">:</span> <span class="n">LocScaleReparam</span><span class="p">(),</span>
+         <span class="s2">&quot;y_c&quot;</span><span class="p">:</span> <span class="n">LocScaleReparam</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">numpyro.infer.initialization</span> <span class="kn">import</span> <span class="n">init_to_median</span>
+
+<span class="n">kernel</span> <span class="o">=</span> <span class="n">NUTS</span><span class="p">(</span><span class="n">reparametrized_model</span><span class="p">,</span> <span class="n">dense_mass</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init_strategy</span><span class="o">=</span><span class="n">init_to_median</span><span class="p">)</span>
+
+<span class="n">mcmc</span> <span class="o">=</span> <span class="n">MCMC</span><span class="p">(</span>
+    <span class="n">kernel</span><span class="p">,</span>
+    <span class="n">num_warmup</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
+    <span class="n">num_samples</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
+    <span class="n">num_chains</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mcmc</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">PRNGKey</span><span class="p">(</span><span class="mi">42</span><span class="p">),</span> <span class="n">img</span><span class="p">,</span> <span class="n">exp</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "258c780bdb234bd192b529b4ef76b6be"}</script><script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "b693ed1985c24a07833668bc9cbb685c"}</script><script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "863cf93982f34279a22e2077076ea595"}</script><script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "3c7175e7e40c4e9c9bd4b375bb10c659"}</script></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">posterior_samples</span> <span class="o">=</span> <span class="n">mcmc</span><span class="o">.</span><span class="n">get_samples</span><span class="p">(</span><span class="n">group_by_chain</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="sanity-checks">
+<h2>Sanity checks<a class="headerlink" href="#sanity-checks" title="Link to this heading">#</a></h2>
+<p>We compute some values to check wether or not our chains went nuts. In particular:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\hat{R}\)</span> should be lower than <span class="math notranslate nohighlight">\(\lesssim 1.01\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(ESS\)</span> should be higher than <span class="math notranslate nohighlight">\(\gtrsim 400\)</span></p></li>
+</ul>
+<p>See e.g. <a class="reference external" href="https://projecteuclid.org/journals/bayesian-analysis/volume-16/issue-2/Rank-Normalization-Folding-and-Localization--An-Improved-R%CB%86-for/10.1214/20-BA1221.full">Vehtari &amp; al.</a></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">arviz</span> <span class="k">as</span> <span class="nn">az</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">inference_data</span> <span class="o">=</span> <span class="n">az</span><span class="o">.</span><span class="n">from_numpyro</span><span class="p">(</span><span class="n">mcmc</span><span class="p">)</span>
+<span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">inference_data</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html">
+  <div id="df-de0952a2-7f86-471e-ac4e-b50f7441a91f" class="colab-df-container">
+    <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mean</th>
+      <th>sd</th>
+      <th>hdi_3%</th>
+      <th>hdi_97%</th>
+      <th>mcse_mean</th>
+      <th>mcse_sd</th>
+      <th>ess_bulk</th>
+      <th>ess_tail</th>
+      <th>r_hat</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>beta</th>
+      <td>0.912</td>
+      <td>0.004</td>
+      <td>0.905</td>
+      <td>0.919</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>22915.0</td>
+      <td>13808.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>norm</th>
+      <td>0.046</td>
+      <td>0.000</td>
+      <td>0.046</td>
+      <td>0.046</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>24049.0</td>
+      <td>14514.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>norm_base</th>
+      <td>-3.080</td>
+      <td>0.003</td>
+      <td>-3.086</td>
+      <td>-3.074</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>24049.0</td>
+      <td>14514.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>r_c</th>
+      <td>8.814</td>
+      <td>0.046</td>
+      <td>8.730</td>
+      <td>8.905</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>22793.0</td>
+      <td>13814.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>x_c</th>
+      <td>26.579</td>
+      <td>0.011</td>
+      <td>26.558</td>
+      <td>26.600</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>22490.0</td>
+      <td>13918.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>x_c_decentered</th>
+      <td>13.617</td>
+      <td>0.008</td>
+      <td>13.602</td>
+      <td>13.631</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>22490.0</td>
+      <td>13918.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>y_c</th>
+      <td>23.816</td>
+      <td>0.011</td>
+      <td>23.796</td>
+      <td>23.837</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>22384.0</td>
+      <td>14235.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>y_c_decentered</th>
+      <td>11.663</td>
+      <td>0.008</td>
+      <td>11.649</td>
+      <td>11.677</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>22384.0</td>
+      <td>14235.0</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    <div class="colab-df-buttons">
+
+  <div class="colab-df-container">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-de0952a2-7f86-471e-ac4e-b50f7441a91f')"
+            title="Convert this dataframe to an interactive table."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960">
+    <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z"/>
+  </svg>
+    </button>
+
+  <style>
+    .colab-df-container {
+      display:flex;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    .colab-df-buttons div {
+      margin-bottom: 4px;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+    <script>
+      const buttonEl =
+        document.querySelector('#df-de0952a2-7f86-471e-ac4e-b50f7441a91f button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-de0952a2-7f86-471e-ac4e-b50f7441a91f');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+  </div>
+
+
+<div id="df-2a41d4c4-1675-44a8-a193-9ca235ced0d1">
+  <button class="colab-df-quickchart" onclick="quickchart('df-2a41d4c4-1675-44a8-a193-9ca235ced0d1')"
+            title="Suggest charts"
+            style="display:none;">
+
+<svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+     width="24px">
+    <g>
+        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+    </g>
+</svg>
+  </button>
+
+<style>
+  .colab-df-quickchart {
+      --bg-color: #E8F0FE;
+      --fill-color: #1967D2;
+      --hover-bg-color: #E2EBFA;
+      --hover-fill-color: #174EA6;
+      --disabled-fill-color: #AAA;
+      --disabled-bg-color: #DDD;
+  }
+
+  [theme=dark] .colab-df-quickchart {
+      --bg-color: #3B4455;
+      --fill-color: #D2E3FC;
+      --hover-bg-color: #434B5C;
+      --hover-fill-color: #FFFFFF;
+      --disabled-bg-color: #3B4455;
+      --disabled-fill-color: #666;
+  }
+
+  .colab-df-quickchart {
+    background-color: var(--bg-color);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none;
+    fill: var(--fill-color);
+    height: 32px;
+    padding: 0;
+    width: 32px;
+  }
+
+  .colab-df-quickchart:hover {
+    background-color: var(--hover-bg-color);
+    box-shadow: 0 1px 2px rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+    fill: var(--button-hover-fill-color);
+  }
+
+  .colab-df-quickchart-complete:disabled,
+  .colab-df-quickchart-complete:disabled:hover {
+    background-color: var(--disabled-bg-color);
+    fill: var(--disabled-fill-color);
+    box-shadow: none;
+  }
+
+  .colab-df-spinner {
+    border: 2px solid var(--fill-color);
+    border-color: transparent;
+    border-bottom-color: var(--fill-color);
+    animation:
+      spin 1s steps(1) infinite;
+  }
+
+  @keyframes spin {
+    0% {
+      border-color: transparent;
+      border-bottom-color: var(--fill-color);
+      border-left-color: var(--fill-color);
+    }
+    20% {
+      border-color: transparent;
+      border-left-color: var(--fill-color);
+      border-top-color: var(--fill-color);
+    }
+    30% {
+      border-color: transparent;
+      border-left-color: var(--fill-color);
+      border-top-color: var(--fill-color);
+      border-right-color: var(--fill-color);
+    }
+    40% {
+      border-color: transparent;
+      border-right-color: var(--fill-color);
+      border-top-color: var(--fill-color);
+    }
+    60% {
+      border-color: transparent;
+      border-right-color: var(--fill-color);
+    }
+    80% {
+      border-color: transparent;
+      border-right-color: var(--fill-color);
+      border-bottom-color: var(--fill-color);
+    }
+    90% {
+      border-color: transparent;
+      border-bottom-color: var(--fill-color);
+    }
+  }
+</style>
+
+  <script>
+    async function quickchart(key) {
+      const quickchartButtonEl =
+        document.querySelector('#' + key + ' button');
+      quickchartButtonEl.disabled = true;  // To prevent multiple clicks.
+      quickchartButtonEl.classList.add('colab-df-spinner');
+      try {
+        const charts = await google.colab.kernel.invokeFunction(
+            'suggestCharts', [key], {});
+      } catch (error) {
+        console.error('Error during call to suggestCharts:', error);
+      }
+      quickchartButtonEl.classList.remove('colab-df-spinner');
+      quickchartButtonEl.classList.add('colab-df-quickchart-complete');
+    }
+    (() => {
+      let quickchartButtonEl =
+        document.querySelector('#df-2a41d4c4-1675-44a8-a193-9ca235ced0d1 button');
+      quickchartButtonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+    })();
+  </script>
+</div>
+
+    </div>
+  </div>
+</div></div>
+</div>
+</section>
+<section id="display-the-results">
+<h2>Display the results<a class="headerlink" href="#display-the-results" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">chainconsumer</span> <span class="kn">import</span> <span class="n">ChainConsumer</span><span class="p">,</span> <span class="n">Chain</span><span class="p">,</span> <span class="n">PlotConfig</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">c</span> <span class="o">=</span> <span class="n">ChainConsumer</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+
+    <span class="c1"># Filter the parameters of interest</span>
+    <span class="n">dict_of_samples</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">key</span><span class="p">:</span><span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">posterior_samples</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;_base&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">key</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;_decentered&quot;</span><span class="p">))</span>
+    <span class="p">}</span>
+
+    <span class="n">chain</span> <span class="o">=</span> <span class="n">Chain</span><span class="p">(</span><span class="n">samples</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">dict_of_samples</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Chain </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">add_chain</span><span class="p">(</span><span class="n">chain</span><span class="p">)</span>
+
+<span class="n">c</span><span class="o">.</span><span class="n">set_plot_config</span><span class="p">(</span><span class="n">PlotConfig</span><span class="p">(</span><span class="n">kde</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">shade_alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">))</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">plotter</span><span class="o">.</span><span class="n">plot_walks</span><span class="p">(</span><span class="n">convolve</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">plot_weights</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/c47c77e860862b78d1172b4b986eb1f587b638dde8521006fead0c0d74f19f52.png" src="../../_images/c47c77e860862b78d1172b4b986eb1f587b638dde8521006fead0c0d74f19f52.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">plotter</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="mi">8</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/a6dcd05103c9d75b438ac87852e647b5544c27d0f31771057077f3dd22d7b7f8.png" src="../../_images/a6dcd05103c9d75b438ac87852e647b5544c27d0f31771057077f3dd22d7b7f8.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fancy line to flatten the parameters and evaluate the image using all our samples</span>
+<span class="n">images</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="k">lambda</span> <span class="n">p</span> <span class="p">:</span> <span class="n">counts</span><span class="p">(</span><span class="n">exp</span><span class="p">,</span> <span class="o">**</span><span class="n">p</span><span class="p">))(</span><span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">ravel</span><span class="p">,</span> <span class="n">posterior_samples</span><span class="p">))</span>
+<span class="n">lower_image</span><span class="p">,</span> <span class="n">median_image</span><span class="p">,</span> <span class="n">upper_image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">84</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">median_residual</span> <span class="o">=</span> <span class="p">(</span><span class="n">img</span> <span class="o">-</span> <span class="n">median_image</span><span class="p">)</span><span class="o">/</span><span class="n">exp</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">131</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="n">wcs</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_axislabel</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_axislabel</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+<span class="n">mappable</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">LogNorm</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="mf">5e1</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmr</span><span class="o">.</span><span class="n">cosmic</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Count image&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">mappable</span><span class="o">=</span><span class="n">mappable</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Photons&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">132</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="n">wcs</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_axislabel</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_axislabel</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+<span class="n">mappable</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">median_image</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">LogNorm</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="mf">5e1</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmr</span><span class="o">.</span><span class="n">cosmic</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Best-fit image&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">mappable</span><span class="o">=</span><span class="n">mappable</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Photons&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">133</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="n">wcs</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_axislabel</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_axislabel</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+<span class="n">mappable</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">median_residual</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmr</span><span class="o">.</span><span class="n">guppy</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Residuals&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">mappable</span><span class="o">=</span><span class="n">mappable</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Surface brightness&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/c37b4b9a4d02be79ae53227920a22e17a3b4c3a729ba59a8d49fde6f07f97498.png" src="../../_images/c37b4b9a4d02be79ae53227920a22e17a3b4c3a729ba59a8d49fde6f07f97498.png" />
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chapters/tutorials"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="intro.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">JAXtronomy-tutorials</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="nbody.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Differentiable DM simulations</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">2D model fitting with <code class="docutils literal notranslate"><span class="pre">JAX</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">numpyro</span></code></a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#import-and-data-loading">Import and data loading</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#data-from-erosita-edr">Data from eRosita EDR</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#surface-brightness-model">Surface Brightness Model</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#maximum-likelihood-estimation">Maximum likelihood estimation</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#bayesian-approach">Bayesian approach</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-mcmc">Running the MCMC</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sanity-checks">Sanity checks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#display-the-results">Display the results</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Jaxstronomy
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

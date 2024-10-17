@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Numpyro &#8212; jax-astro-guide</title>
+    <title>JAXtronomy-tutorials &#8212; jax-astro-guide</title>
   
   
   
@@ -57,11 +57,11 @@
     <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/numpyro/introduction';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/tutorials/intro';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Surrogate Models in Astronomy: Why and How with Python and JAX" href="surrogates.html" />
-    <link rel="prev" title="Jax" href="../jax/introduction.html" />
+    <link rel="next" title="2D model fitting with JAX &amp; numpyro" href="cluster.html" />
+    <link rel="prev" title="Surrogate Models in Astronomy: Why and How with Python and JAX" href="../numpyro/surrogates.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -189,20 +189,20 @@
 <li class="toctree-l1"><a class="reference internal" href="../jax/introduction.html">Jax</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">numpyro</span></p>
-<ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Numpyro</a></li>
-<li class="toctree-l1"><a class="reference internal" href="surrogates.html">Surrogate Models in Astronomy: Why and How with Python and JAX</a></li>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../numpyro/introduction.html">Numpyro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../numpyro/surrogates.html">Surrogate Models in Astronomy: Why and How with Python and JAX</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">tutorials</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/intro.html">JAXtronomy-tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/cluster.html">2D model fitting with <code class="docutils literal notranslate"><span class="pre">JAX</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">numpyro</span></code></a></li>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">JAXtronomy-tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cluster.html">2D model fitting with <code class="docutils literal notranslate"><span class="pre">JAX</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">numpyro</span></code></a></li>
 
 
 
 
 
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/nbody.html">Differentiable DM simulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nbody.html">Differentiable DM simulations</a></li>
 
 </ul>
 
@@ -275,7 +275,7 @@
       
       
       
-      <li><a href="https://github.com/JAXtronomy/jax-astro-guide/issues/new?title=Issue%20on%20page%20%2Fchapters/numpyro/introduction.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/JAXtronomy/jax-astro-guide/issues/new?title=Issue%20on%20page%20%2Fchapters/tutorials/intro.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -305,7 +305,7 @@
       
       
       
-      <li><a href="../../_sources/chapters/numpyro/introduction.md" target="_blank"
+      <li><a href="../../_sources/chapters/tutorials/intro.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -387,7 +387,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Numpyro</h1>
+    <h1>JAXtronomy-tutorials</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -401,8 +401,9 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="numpyro">
-<h1>Numpyro<a class="headerlink" href="#numpyro" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="jaxtronomy-tutorials">
+<h1>JAXtronomy-tutorials<a class="headerlink" href="#jaxtronomy-tutorials" title="Link to this heading">#</a></h1>
+<p>A set of tutorials using JAX for astronomy and astrophysics topics</p>
 </section>
 
     <script type="text/x-thebe-config">
@@ -418,7 +419,7 @@ document.write(`
         },
         kernelOptions: {
             name: "python3",
-            path: "./chapters/numpyro"
+            path: "./chapters/tutorials"
         },
         predefinedOutput: true
     }
@@ -436,20 +437,20 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../jax/introduction.html"
+       href="../numpyro/surrogates.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Jax</p>
+        <p class="prev-next-title">Surrogate Models in Astronomy: Why and How with Python and JAX</p>
       </div>
     </a>
     <a class="right-next"
-       href="surrogates.html"
+       href="cluster.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Surrogate Models in Astronomy: Why and How with Python and JAX</p>
+        <p class="prev-next-title">2D model fitting with <code class="docutils literal notranslate"><span class="pre">JAX</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">numpyro</span></code></p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
