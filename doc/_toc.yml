@@ -18,3 +18,9 @@ parts:
     chapters:
       - file: chapters/numpyro/introduction
       - file: chapters/numpyro/surrogates
+
+  - caption: tutorials
+    chapters:
+      - file: chapters/tutorials/intro
+      - file: chapters/tutorials/cluster
+      - file: chapters/tutorials/nbody
