@@ -2,13 +2,13 @@
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="../" >
+<html lang="en" data-content_root="../../" >
 
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Prerequisites &#8212; jax-astro-guide</title>
+    <title>Introduction to JAX with Distributed Computations &#8212; jax-astro-guide</title>
   
   
   
@@ -18,50 +18,48 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
   
-  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
-    <script src="../_static/doctools.js?v=9a2dae69"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
-    <script src="../_static/copybutton.js?v=f281be69"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script src="../../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/requirements';</script>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Jax" href="jax/introduction.html" />
-    <link rel="prev" title="Preface" href="preface.html" />
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/jax/distributed';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -93,7 +91,7 @@
     <div class="search-button__overlay"></div>
     <div class="search-button__search-container">
 <form class="bd-search d-flex align-items-center"
-      action="../search.html"
+      action="../../search.html"
       method="get">
   <i class="fa-solid fa-magnifying-glass"></i>
   <input type="search"
@@ -124,6 +122,8 @@
       
       
       
+        
+      
       <div class="bd-sidebar-primary bd-sidebar">
         
 
@@ -142,7 +142,7 @@
     
   
 
-<a class="navbar-brand logo" href="../intro.html">
+<a class="navbar-brand logo" href="../../intro.html">
   
   
   
@@ -153,8 +153,8 @@
       
     
     
-    <img src="../_static/logo.png" class="logo__image only-light" alt="jax-astro-guide - Home"/>
-    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="jax-astro-guide - Home"/>`);</script>
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="jax-astro-guide - Home"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="jax-astro-guide - Home"/>`);</script>
   
   
 </a></div>
@@ -174,36 +174,36 @@
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
-                <a class="reference internal" href="../intro.html">
+                <a class="reference internal" href="../../intro.html">
                     A primer on Jax ecosystem(s) in astronomy
                 </a>
             </li>
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
-<ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="preface.html">Preface</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Prerequisites</a></li>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../requirements.html">Prerequisites</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">jax</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="jax/introduction.html">Jax</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Jax</a></li>
 
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">numpyro</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="numpyro/introduction.html">Numpyro</a></li>
-<li class="toctree-l1"><a class="reference internal" href="numpyro/surrogates.html">Surrogate Models in Astronomy: Why and How with Python and JAX</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../numpyro/introduction.html">Numpyro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../numpyro/surrogates.html">Surrogate Models in Astronomy: Why and How with Python and JAX</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">tutorials</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="tutorials/intro.html">JAXtronomy-tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/cluster.html">2D model fitting with <code class="docutils literal notranslate"><span class="pre">JAX</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">numpyro</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/intro.html">JAXtronomy-tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/cluster.html">2D model fitting with <code class="docutils literal notranslate"><span class="pre">JAX</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">numpyro</span></code></a></li>
 
 
 
 
 
-<li class="toctree-l1"><a class="reference internal" href="tutorials/nbody.html">Differentiable DM simulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/nbody.html">Differentiable DM simulations</a></li>
 
 </ul>
 
@@ -276,7 +276,7 @@
       
       
       
-      <li><a href="https://github.com/JAXtronomy/jax-astro-guide/issues/new?title=Issue%20on%20page%20%2Fchapters/requirements.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/JAXtronomy/jax-astro-guide/issues/new?title=Issue%20on%20page%20%2Fchapters/jax/distributed.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -306,7 +306,7 @@
       
       
       
-      <li><a href="../_sources/chapters/requirements.md" target="_blank"
+      <li><a href="../../_sources/chapters/jax/distributed.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -390,7 +390,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Prerequisites</h1>
+    <h1>Introduction to JAX with Distributed Computations</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -400,7 +400,10 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">Getting Started.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-features-of-jax-for-distributed-computations">Key Features of JAX for Distributed Computations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distributed-computations-on-multiple-devices">Distributed Computations on Multiple Devices</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distributed-computations-on-multiple-hosts">Distributed Computations on Multiple Hosts</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distributed-data-sharded-device-array">Distributed data (<code class="docutils literal notranslate"><span class="pre">sharded_device_array</span></code>)</a></li>
 </ul>
             </nav>
         </div>
@@ -412,13 +415,29 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="prerequisites">
-<h1>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h1>
-<p>This repo uses the Python 3 programming language, along with a standard set of numerical and data visualization tools in astronomy, scientific experiments, and open-source projects. According to regular surveys, Python is the primary programming language of about 80% of astronomers today. By learning the Python language, you will join a community of millions of software developers and data scientists.</p>
-<section id="getting-started">
-<h2>Getting Started.<a class="headerlink" href="#getting-started" title="Link to this heading">#</a></h2>
-<p>A Python program can be executed by any computer, regardless of manufacturer or operating system, provided that support for the language is installed. If you wish to install the version of Python and the libraries that will match this book, we recommend the Python 3 language interpreter. You can also use web-based environments such as <a class="reference external" href="https://colab.research.google.com/">Google Colab</a>, <a class="reference external" href="https://deepnote.com">Deepnote</a>, etc.</p>
-<p>This text includes a complete introduction to all of these computational tools. You will learn to write programs, generate figures and files from data, and work with public real-world data sets.</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="introduction-to-jax-with-distributed-computations">
+<h1>Introduction to JAX with Distributed Computations<a class="headerlink" href="#introduction-to-jax-with-distributed-computations" title="Link to this heading">#</a></h1>
+<p>JAX is a high-performance numerical computing library that brings together the power of automatic differentiation and GPU/TPU acceleration. It is particularly well-suited for machine learning research and other computationally intensive tasks. One of the standout features of JAX is its ability to seamlessly scale computations across multiple devices and hosts, enabling efficient distributed computing.</p>
+<section id="key-features-of-jax-for-distributed-computations">
+<h2>Key Features of JAX for Distributed Computations<a class="headerlink" href="#key-features-of-jax-for-distributed-computations" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Automatic Differentiation</strong>: JAX provides powerful automatic differentiation capabilities, making it easy to compute gradients for optimization tasks.</p></li>
+<li><p><strong>GPU/TPU Acceleration</strong>: JAX can leverage GPUs and TPUs to accelerate computations, providing significant performance improvements over CPU-only execution.</p></li>
+<li><p><strong>Distributed Computing</strong>: JAX supports distributed computations across multiple devices (e.g., multiple GPUs) and multiple hosts (e.g., multiple machines in a cluster), allowing for scalable and efficient parallel processing.</p></li>
+</ul>
+</section>
+<section id="distributed-computations-on-multiple-devices">
+<h2>Distributed Computations on Multiple Devices<a class="headerlink" href="#distributed-computations-on-multiple-devices" title="Link to this heading">#</a></h2>
+<p>JAX simplifies the process of distributing computations across multiple devices. By using the <code class="docutils literal notranslate"><span class="pre">jax.pmap</span></code> function, you can parallelize operations across multiple devices, such as GPUs, within a single host. This enables you to take full advantage of the available hardware resources.</p>
+</section>
+<section id="distributed-computations-on-multiple-hosts">
+<h2>Distributed Computations on Multiple Hosts<a class="headerlink" href="#distributed-computations-on-multiple-hosts" title="Link to this heading">#</a></h2>
+<p>For even larger-scale computations, JAX supports distributed computing across multiple hosts. This involves coordinating computations across different machines in a cluster, allowing for massive parallelism and efficient use of distributed resources. JAX provides tools and abstractions to manage communication and synchronization between hosts, ensuring that distributed computations are both efficient and scalable.</p>
+<p>In summary, JAX’s support for distributed computations on multiple devices and hosts makes it a powerful tool for tackling large-scale numerical and machine learning tasks. Whether you are working on a single machine with multiple GPUs or a large cluster of machines, JAX provides the flexibility and performance needed to efficiently scale your computations.</p>
+</section>
+<section id="distributed-data-sharded-device-array">
+<h2>Distributed data (<code class="docutils literal notranslate"><span class="pre">sharded_device_array</span></code>)<a class="headerlink" href="#distributed-data-sharded-device-array" title="Link to this heading">#</a></h2>
+<p>JAX provides a data structure called <code class="docutils literal notranslate"><span class="pre">sharded_device_array</span></code> that allows you to distribute large arrays across multiple devices in a memory-efficient manner and relatively transparently for your code. This data structure is particularly useful for handling large datasets that do not fit in the memory of a single device.</p>
 </section>
 </section>
 
@@ -435,7 +454,7 @@ document.write(`
         },
         kernelOptions: {
             name: "python3",
-            path: "./chapters"
+            path: "./chapters/jax"
         },
         predefinedOutput: true
     }
@@ -452,24 +471,6 @@ document.write(`
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="preface.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Preface</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="jax/introduction.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Jax</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
 </div>
                 </footer>
               
@@ -486,7 +487,10 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">Getting Started.</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-features-of-jax-for-distributed-computations">Key Features of JAX for Distributed Computations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distributed-computations-on-multiple-devices">Distributed Computations on Multiple Devices</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distributed-computations-on-multiple-hosts">Distributed Computations on Multiple Hosts</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distributed-data-sharded-device-array">Distributed data (<code class="docutils literal notranslate"><span class="pre">sharded_device_array</span></code>)</a></li>
 </ul>
   </nav></div>
 
@@ -535,8 +539,8 @@ By Jaxstronomy
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>

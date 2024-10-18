@@ -189,6 +189,7 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">jax</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../jax/introduction.html">Jax</a></li>
+
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">numpyro</span></p>
 <ul class="nav bd-sidenav">
@@ -446,19 +447,21 @@ document.write(`
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting cmasher
-  Downloading cmasher-1.8.0-py3-none-any.whl.metadata (8.2 kB)
-Requirement already satisfied: numpyro in /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages (0.15.3)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting chainconsumer
-  Downloading chainconsumer-1.1.2-py3-none-any.whl.metadata (15 kB)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  Downloading cmasher-1.8.0-py3-none-any.whl.metadata (8.2 kB)
+Requirement already satisfied: numpyro in /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages (0.15.3)
+Collecting chainconsumer
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  Downloading chainconsumer-1.1.2-py3-none-any.whl.metadata (15 kB)
 Collecting jaxopt
   Downloading jaxopt-0.8.3-py3-none-any.whl.metadata (2.6 kB)
 Collecting colorspacious&gt;=1.1.0 (from cmasher)
-  Downloading colorspacious-1.1.2-py2.py3-none-any.whl.metadata (3.6 kB)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: matplotlib&gt;=3.5 in /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages (from cmasher) (3.9.2)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  Downloading colorspacious-1.1.2-py2.py3-none-any.whl.metadata (3.6 kB)
+Requirement already satisfied: matplotlib&gt;=3.5 in /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages (from cmasher) (3.9.2)
 Requirement already satisfied: numpy&gt;=1.19.3 in /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages (from cmasher) (1.26.4)
 Requirement already satisfied: jax&gt;=0.4.25 in /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages (from numpyro) (0.4.34)
 Requirement already satisfied: jaxlib&gt;=0.4.25 in /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages (from numpyro) (0.4.34)
@@ -468,11 +471,15 @@ Requirement already satisfied: pandas&lt;3.0.0,&gt;=2.1.1 in /opt/hostedtoolcach
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting pillow&lt;11.0.0,&gt;=10.0.1 (from chainconsumer)
-  Downloading pillow-10.4.0-cp312-cp312-manylinux_2_28_x86_64.whl.metadata (9.2 kB)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  Downloading pillow-10.4.0-cp312-cp312-manylinux_2_28_x86_64.whl.metadata (9.2 kB)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting pydantic&lt;3.0.0,&gt;=2.2.0 (from chainconsumer)
-  Downloading pydantic-2.9.2-py3-none-any.whl.metadata (149 kB)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  Downloading pydantic-2.9.2-py3-none-any.whl.metadata (149 kB)
 Requirement already satisfied: scipy&lt;2.0.0,&gt;=1.8.0 in /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages (from chainconsumer) (1.14.1)
 </pre></div>
 </div>
@@ -504,24 +511,26 @@ Requirement already satisfied: typing-extensions&gt;=4.6.1 in /opt/hostedtoolcac
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting patsy&gt;=0.5.6 (from statsmodels&lt;1,&gt;=0.14.0-&gt;chainconsumer)
   Downloading patsy-0.5.6-py2.py3-none-any.whl.metadata (3.5 kB)
-Requirement already satisfied: six in /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages (from patsy&gt;=0.5.6-&gt;statsmodels&lt;1,&gt;=0.14.0-&gt;chainconsumer) (1.16.0)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading cmasher-1.8.0-py3-none-any.whl (533 kB)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: six in /opt/hostedtoolcache/Python/3.12.7/x64/lib/python3.12/site-packages (from patsy&gt;=0.5.6-&gt;statsmodels&lt;1,&gt;=0.14.0-&gt;chainconsumer) (1.16.0)
+Downloading cmasher-1.8.0-py3-none-any.whl (533 kB)
 ?25l   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">0.0/533.3 kB</span> <span class=" -Color -Color-Red">?</span> eta <span class=" -Color -Color-Cyan">-:--:--</span>
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">533.3/533.3 kB</span> <span class=" -Color -Color-Red">64.5 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:00</span>
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">533.3/533.3 kB</span> <span class=" -Color -Color-Red">50.7 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:00</span>
 ?25hDownloading chainconsumer-1.1.2-py3-none-any.whl (47 kB)
-Downloading jaxopt-0.8.3-py3-none-any.whl (172 kB)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading jaxopt-0.8.3-py3-none-any.whl (172 kB)
 Downloading colorspacious-1.1.2-py2.py3-none-any.whl (37 kB)
 Downloading pillow-10.4.0-cp312-cp312-manylinux_2_28_x86_64.whl (4.5 MB)
 ?25l   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">0.0/4.5 MB</span> <span class=" -Color -Color-Red">?</span> eta <span class=" -Color -Color-Cyan">-:--:--</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">4.5/4.5 MB</span> <span class=" -Color -Color-Red">167.9 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:00</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">4.5/4.5 MB</span> <span class=" -Color -Color-Red">146.8 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:00</span>
 ?25hDownloading pydantic-2.9.2-py3-none-any.whl (434 kB)
 Downloading pydantic_core-2.23.4-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
 ?25l   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">0.0/2.1 MB</span> <span class=" -Color -Color-Red">?</span> eta <span class=" -Color -Color-Cyan">-:--:--</span>
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">2.1/2.1 MB</span> <span class=" -Color -Color-Red">154.9 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:00</span>
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">2.1/2.1 MB</span> <span class=" -Color -Color-Red">144.3 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:00</span>
 ?25h
 </pre></div>
 </div>
@@ -529,7 +538,7 @@ Downloading pydantic_core-2.23.4-cp312-cp312-manylinux_2_17_x86_64.manylinux2014
 ?25l   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">0.0/10.7 MB</span> <span class=" -Color -Color-Red">?</span> eta <span class=" -Color -Color-Cyan">-:--:--</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">10.7/10.7 MB</span> <span class=" -Color -Color-Red">136.7 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:00</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ <span class=" -Color -Color-Green">10.7/10.7 MB</span> <span class=" -Color -Color-Red">178.8 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:00</span>
 ?25hDownloading annotated_types-0.7.0-py3-none-any.whl (13 kB)
 Downloading patsy-0.5.6-py2.py3-none-any.whl (233 kB)
 </pre></div>
@@ -556,20 +565,18 @@ Downloading patsy-0.5.6-py2.py3-none-any.whl (233 kB)
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>--2024-10-17 19:45:11--  https://github.com/JAXtronomy/jax-astro-guide/raw/main/data/a3266_img_erosita.fits
-Resolving github.com (github.com)... 140.82.113.4
-Connecting to github.com (github.com)|140.82.113.4|:443... connected.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>--2024-10-18 16:08:26--  https://github.com/JAXtronomy/jax-astro-guide/raw/main/data/a3266_img_erosita.fits
+Resolving github.com (github.com)... 140.82.114.4
+Connecting to github.com (github.com)|140.82.114.4|:443... connected.
 HTTP request sent, awaiting response... 
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>302 Found
 Location: https://media.githubusercontent.com/media/JAXtronomy/jax-astro-guide/main/data/a3266_img_erosita.fits [following]
---2024-10-17 19:45:11--  https://media.githubusercontent.com/media/JAXtronomy/jax-astro-guide/main/data/a3266_img_erosita.fits
+--2024-10-18 16:08:26--  https://media.githubusercontent.com/media/JAXtronomy/jax-astro-guide/main/data/a3266_img_erosita.fits
 Resolving media.githubusercontent.com (media.githubusercontent.com)... 185.199.108.133, 185.199.109.133, 185.199.110.133, ...
 Connecting to media.githubusercontent.com (media.githubusercontent.com)|185.199.108.133|:443... connected.
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>HTTP request sent, awaiting response... 
+HTTP request sent, awaiting response... 
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>200 OK
@@ -580,28 +587,28 @@ Saving to: ‘a3266_img_erosita.fits’
 a3266_img_erosita.f   0%[                    ]       0  --.-KB/s               
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>a3266_img_erosita.f  37%[======&gt;             ]  70.15M   351MB/s               
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>a3266_img_erosita.f  30%[=====&gt;              ]  56.96M   285MB/s               
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>a3266_img_erosita.f  77%[==============&gt;     ] 145.52M   364MB/s               
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>a3266_img_erosita.f  68%[============&gt;       ] 128.84M   322MB/s               
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>a3266_img_erosita.f 100%[===================&gt;] 187.82M   365MB/s    in 0.5s    
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>a3266_img_erosita.f 100%[===================&gt;] 187.82M   333MB/s    in 0.6s    
 
-2024-10-17 19:45:15 (365 MB/s) - ‘a3266_img_erosita.fits’ saved [196948800/196948800]
+2024-10-18 16:08:30 (333 MB/s) - ‘a3266_img_erosita.fits’ saved [196948800/196948800]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>--2024-10-17 19:45:15--  https://github.com/JAXtronomy/jax-astro-guide/raw/main/data/a3266_exp_erosita.fits
-Resolving github.com (github.com)... 140.82.113.4
-Connecting to github.com (github.com)|140.82.113.4|:443... connected.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>--2024-10-18 16:08:30--  https://github.com/JAXtronomy/jax-astro-guide/raw/main/data/a3266_exp_erosita.fits
+Resolving github.com (github.com)... 140.82.114.4
+Connecting to github.com (github.com)|140.82.114.4|:443... connected.
 HTTP request sent, awaiting response... 
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>302 Found
 Location: https://media.githubusercontent.com/media/JAXtronomy/jax-astro-guide/main/data/a3266_exp_erosita.fits [following]
---2024-10-17 19:45:15--  https://media.githubusercontent.com/media/JAXtronomy/jax-astro-guide/main/data/a3266_exp_erosita.fits
-Resolving media.githubusercontent.com (media.githubusercontent.com)... 185.199.111.133, 185.199.110.133, 185.199.109.133, ...
-Connecting to media.githubusercontent.com (media.githubusercontent.com)|185.199.111.133|:443... connected.
+--2024-10-18 16:08:31--  https://media.githubusercontent.com/media/JAXtronomy/jax-astro-guide/main/data/a3266_exp_erosita.fits
+Resolving media.githubusercontent.com (media.githubusercontent.com)... 185.199.109.133, 185.199.110.133, 185.199.108.133, ...
+Connecting to media.githubusercontent.com (media.githubusercontent.com)|185.199.109.133|:443... connected.
 HTTP request sent, awaiting response... 
 </pre></div>
 </div>
@@ -615,7 +622,7 @@ a3266_exp_erosita.f   0%[                    ]       0  --.-KB/s
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>a3266_exp_erosita.f 100%[===================&gt;]  40.58M  --.-KB/s    in 0.1s    
 
-2024-10-17 19:45:16 (324 MB/s) - ‘a3266_exp_erosita.fits’ saved [42546240/42546240]
+2024-10-18 16:08:32 (294 MB/s) - ‘a3266_exp_erosita.fits’ saved [42546240/42546240]
 </pre></div>
 </div>
 </div>
