@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Introduction to JAX with Distributed Computations &#8212; jax-astro-guide</title>
+    <title>Assorted JAX Tips &#8212; jax-astro-guide</title>
   
   
   
@@ -60,7 +60,7 @@
     <script async="async" src="../../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/jax/distributed';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/jax/tips';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -265,7 +265,7 @@
       
       
       
-      <li><a href="https://github.com/JAXtronomy/jax-astro-guide/issues/new?title=Issue%20on%20page%20%2Fchapters/jax/distributed.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/JAXtronomy/jax-astro-guide/issues/new?title=Issue%20on%20page%20%2Fchapters/jax/tips.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -295,7 +295,7 @@
       
       
       
-      <li><a href="../../_sources/chapters/jax/distributed.md" target="_blank"
+      <li><a href="../../_sources/chapters/jax/tips.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -371,7 +371,7 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Introduction to JAX with Distributed Computations</h1>
+    <h1>Assorted JAX Tips</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -381,10 +381,13 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-features-of-jax-for-distributed-computations">Key Features of JAX for Distributed Computations</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distributed-computations-on-multiple-devices">Distributed Computations on Multiple Devices</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distributed-computations-on-multiple-hosts">Distributed Computations on Multiple Hosts</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distributed-data-sharded-device-array">Distributed data (<code class="docutils literal notranslate"><span class="pre">sharded_device_array</span></code>)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#speed-and-performance">Speed and Performance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices">Best Practices</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#equinox-and-diffrax">Equinox and Diffrax</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#control-flows">Control Flows</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#debugging-and-profiling">Debugging and Profiling</a></li>
 </ul>
             </nav>
         </div>
@@ -396,29 +399,67 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="introduction-to-jax-with-distributed-computations">
-<h1>Introduction to JAX with Distributed Computations<a class="headerlink" href="#introduction-to-jax-with-distributed-computations" title="Link to this heading">#</a></h1>
-<p>JAX is a high-performance numerical computing library that brings together the power of automatic differentiation and GPU/TPU acceleration. It is particularly well-suited for machine learning research and other computationally intensive tasks. One of the standout features of JAX is its ability to seamlessly scale computations across multiple devices and hosts, enabling efficient distributed computing.</p>
-<section id="key-features-of-jax-for-distributed-computations">
-<h2>Key Features of JAX for Distributed Computations<a class="headerlink" href="#key-features-of-jax-for-distributed-computations" title="Link to this heading">#</a></h2>
+  <section class="tex2jax_ignore mathjax_ignore" id="assorted-jax-tips">
+<h1>Assorted JAX Tips<a class="headerlink" href="#assorted-jax-tips" title="Link to this heading">#</a></h1>
+<p>Below are some accumulated tips and tricks to get your JAX code running quickly
+and avoid pitfalls that might not appear obviously in documentation.  This list
+is in no way comprehensive or official, and we welcome suggestions for refinement
+or for other tips.</p>
+<section id="speed-and-performance">
+<h2>Speed and Performance<a class="headerlink" href="#speed-and-performance" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><strong>Automatic Differentiation</strong>: JAX provides powerful automatic differentiation capabilities, making it easy to compute gradients for optimization tasks.</p></li>
-<li><p><strong>GPU/TPU Acceleration</strong>: JAX can leverage GPUs and TPUs to accelerate computations, providing significant performance improvements over CPU-only execution.</p></li>
-<li><p><strong>Distributed Computing</strong>: JAX supports distributed computations across multiple devices (e.g., multiple GPUs) and multiple hosts (e.g., multiple machines in a cluster), allowing for scalable and efficient parallel processing.</p></li>
+<li><p>Converting a list to a <code class="docutils literal notranslate"><span class="pre">jnp.array</span></code> is slow, see <a class="github reference external" href="https://github.com/google/jax/issues/10662">google/jax#10662</a></p></li>
+<li><p>Reshaping arrays with <code class="docutils literal notranslate"><span class="pre">.reshape</span></code> is slow, see <a class="github reference external" href="https://github.com/google/jax/discussions/11013">google/jax#11013</a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.set</span></code> is slow in some cases.  Only use it if you don’t know the index at with the element will be set, otherwise you should be able to use <code class="docutils literal notranslate"><span class="pre">vmap</span></code>/<code class="docutils literal notranslate"><span class="pre">vectorize</span></code> instead.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">map_coordinates</span></code> seems to be slow, though at the moment good alternatives for 2D interpolation are not known by this author.</p></li>
 </ul>
 </section>
-<section id="distributed-computations-on-multiple-devices">
-<h2>Distributed Computations on Multiple Devices<a class="headerlink" href="#distributed-computations-on-multiple-devices" title="Link to this heading">#</a></h2>
-<p>JAX simplifies the process of distributing computations across multiple devices. By using the <code class="docutils literal notranslate"><span class="pre">jax.pmap</span></code> function, you can parallelize operations across multiple devices, such as GPUs, within a single host. This enables you to take full advantage of the available hardware resources.</p>
+<section id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Many JAX functions are already built to take vector inputs.  <code class="docutils literal notranslate"><span class="pre">jnp.interp</span></code>, for example, can interpolate over vector inputs–this behavior is documented, but new users often miss it!</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">jit</span></code> the <code class="docutils literal notranslate"><span class="pre">vmap</span></code>’d version of function, rather than <code class="docutils literal notranslate"><span class="pre">vmap</span></code>ing a <code class="docutils literal notranslate"><span class="pre">jit</span></code>ed function (see <a class="github reference external" href="https://github.com/jax-ml/jax/issues/6312">jax-ml/jax#6312</a>).  The latter introduces some minor overhead which may be noticeable for faster computations.</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">jax.pure_callback</span></code> to call a python function in JAX and still get to use jit.  Unfortunately for autodifferentiation you will need to specify a <code class="docutils literal notranslate"><span class="pre">custom_jvp</span></code> or <code class="docutils literal notranslate"><span class="pre">custom_vjp</span></code> if you use this.</p></li>
+</ul>
+<section id="equinox-and-diffrax">
+<h3>Equinox and Diffrax<a class="headerlink" href="#equinox-and-diffrax" title="Link to this heading">#</a></h3>
+<p>If you’re a user of <a class="reference external" href="https://docs.kidger.site/equinox/">equinox</a> and/or <a class="reference external" href="https://docs.kidger.site/diffrax/">diffrax</a> (both are common in scientific computing applications of JAX), there are a couple of extra best-practice tips that may be helpful for you:</p>
+<ul class="simple">
+<li><p>If you use equinox modules and <code class="docutils literal notranslate"><span class="pre">vmap</span></code> is suspiciously slow, try using <code class="docutils literal notranslate"><span class="pre">eqx.filter_vmap</span></code> instead.</p></li>
+<li><p>Be wary of <code class="docutils literal notranslate"><span class="pre">eqx.filter_jit</span></code>.  If you’re using equinox modules and seeing lots of cache misses when profiling, <code class="docutils literal notranslate"><span class="pre">eqx.filter_jit</span></code> could be to blame.  At least replacing <code class="docutils literal notranslate"><span class="pre">filter_jit</span></code> with <code class="docutils literal notranslate"><span class="pre">jax.jit</span></code> could make profiler output easier to interpret.</p></li>
+<li><p>Often it’s better to reduce the number of <code class="docutils literal notranslate"><span class="pre">diffrax</span></code> calls, i.e., try not to solve different differential equations across different regions if you can help is.  If the equation you’re trying to solve is significantly more complicated in one regime vs another then you may find multiple diffrax calls could be helpful.</p></li>
+</ul>
 </section>
-<section id="distributed-computations-on-multiple-hosts">
-<h2>Distributed Computations on Multiple Hosts<a class="headerlink" href="#distributed-computations-on-multiple-hosts" title="Link to this heading">#</a></h2>
-<p>For even larger-scale computations, JAX supports distributed computing across multiple hosts. This involves coordinating computations across different machines in a cluster, allowing for massive parallelism and efficient use of distributed resources. JAX provides tools and abstractions to manage communication and synchronization between hosts, ensuring that distributed computations are both efficient and scalable.</p>
-<p>In summary, JAX’s support for distributed computations on multiple devices and hosts makes it a powerful tool for tackling large-scale numerical and machine learning tasks. Whether you are working on a single machine with multiple GPUs or a large cluster of machines, JAX provides the flexibility and performance needed to efficiently scale your computations.</p>
 </section>
-<section id="distributed-data-sharded-device-array">
-<h2>Distributed data (<code class="docutils literal notranslate"><span class="pre">sharded_device_array</span></code>)<a class="headerlink" href="#distributed-data-sharded-device-array" title="Link to this heading">#</a></h2>
-<p>JAX provides a data structure called <code class="docutils literal notranslate"><span class="pre">sharded_device_array</span></code> that allows you to distribute large arrays across multiple devices in a memory-efficient manner and relatively transparently for your code. This data structure is particularly useful for handling large datasets that do not fit in the memory of a single device.</p>
+<section id="control-flows">
+<h2>Control Flows<a class="headerlink" href="#control-flows" title="Link to this heading">#</a></h2>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">jnp.where</span></code> is a great way to replace <code class="docutils literal notranslate"><span class="pre">if</span></code>/<code class="docutils literal notranslate"><span class="pre">else</span></code> statements in your code, though you can still avoid conditionals in other ways.  For example, Python automatically converts the boolean array to values (<code class="docutils literal notranslate"><span class="pre">1</span></code> for <code class="docutils literal notranslate"><span class="pre">True</span></code>, <code class="docutils literal notranslate"><span class="pre">0</span></code> for <code class="docutils literal notranslate"><span class="pre">False</span></code>), which JAX works with as well.  You can therefore write lines like  <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">value</span> <span class="pre">*</span> <span class="pre">jnp.logical_or(cond1,cond2)</span></code>.</p></li>
+<li><p>If you’re doing logic on array indices that you wanted to ravel/unravel, you can just use the numpy versions, <strong>as long as you’re operating on static objects</strong>.  Something like</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">unravel_index</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">5</span><span class="p">:</span>
+      <span class="o">...</span>
+</pre></div>
+</div>
+<p>is perfectly fine in <code class="docutils literal notranslate"><span class="pre">jit</span></code>ed code.</p>
+</li>
+</ul>
+</section>
+<section id="debugging-and-profiling">
+<h2>Debugging and Profiling<a class="headerlink" href="#debugging-and-profiling" title="Link to this heading">#</a></h2>
+<ul>
+<li><p>JAX now has many ways to print inside a <code class="docutils literal notranslate"><span class="pre">jit</span></code>ed function!  <code class="docutils literal notranslate"><span class="pre">jax.debug.print</span></code> is a great for simple inspection (but does not work with <code class="docutils literal notranslate"><span class="pre">grad</span></code>).  Calling, e.g.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="n">t</span> <span class="o">=</span> <span class="o">...</span>
+ <span class="k">def</span> <span class="nf">printer</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+       <span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+ <span class="n">jax</span><span class="o">.</span><span class="n">debug</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="n">printer</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>works inside both <code class="docutils literal notranslate"><span class="pre">jit</span></code> and <code class="docutils literal notranslate"><span class="pre">grad</span></code>.  See <a class="reference external" href="https://jax.readthedocs.io/en/latest/notebooks/external_callbacks.html">https://jax.readthedocs.io/en/latest/notebooks/external_callbacks.html</a> for more.</p>
+</li>
+<li><p>Always use <code class="docutils literal notranslate"><span class="pre">.block_until_ready()</span></code> or do something with the result of your calculation if you’re doing a timing test, otherwise you might just get the dispatch time (see <a class="reference external" href="https://jax.readthedocs.io/en/latest/async_dispatch.html">asynchronous dispatch</a>).</p></li>
+<li><p>Don’t be afraid of functions like <code class="docutils literal notranslate"><span class="pre">jax.lower(fun)(x)</span></code> or <code class="docutils literal notranslate"><span class="pre">jax.make_jaxpr(fun)(x)</span></code> to see what the compilers are doing to the function <code class="docutils literal notranslate"><span class="pre">fun</span></code> with input <code class="docutils literal notranslate"><span class="pre">x</span></code>.  The former is best for smaller, more contained functions.</p></li>
+</ul>
 </section>
 </section>
 
@@ -469,10 +510,13 @@
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#key-features-of-jax-for-distributed-computations">Key Features of JAX for Distributed Computations</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distributed-computations-on-multiple-devices">Distributed Computations on Multiple Devices</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distributed-computations-on-multiple-hosts">Distributed Computations on Multiple Hosts</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distributed-data-sharded-device-array">Distributed data (<code class="docutils literal notranslate"><span class="pre">sharded_device_array</span></code>)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#speed-and-performance">Speed and Performance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices">Best Practices</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#equinox-and-diffrax">Equinox and Diffrax</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#control-flows">Control Flows</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#debugging-and-profiling">Debugging and Profiling</a></li>
 </ul>
   </nav></div>
 
