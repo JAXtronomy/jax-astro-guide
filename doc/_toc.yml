@@ -13,6 +13,7 @@ parts:
   - caption: jax
     chapters:
       - file: chapters/jax/introduction
+      - file: chapters/jax/tips
 
   - caption: numpyro
     chapters:
